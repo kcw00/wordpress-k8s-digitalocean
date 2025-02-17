@@ -1,0 +1,176 @@
+##################################################################
+# 1. SECRET (MySQL root and WordPress user password)
+##################################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+type: Opaque
+data:
+  # Store passwords as base64-encoded strings.
+  # e.g. echo -n 'myrootpassword' | base64
+  mysql-root-password: bXlyb290cGFzc3dvcmQ=
+  mysql-password: bXl3b3JkcHJlc3NwYXNz
+
+---
+##################################################################
+# 2. PERSISTENT VOLUME CLAIM (MySQL Data)
+##################################################################
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: do-block-storage # or the default storage class for DigitalOcean
+
+
+
+---
+##################################################################
+# 3. MYSQL DEPLOYMENT
+##################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              value: wordpress
+            - name: MYSQL_USER
+              value: wordpress
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+---
+##################################################################
+# 4. MYSQL SERVICE (ClusterIP, internal to the cluster)
+##################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+  clusterIP: None
+  # "clusterIP: None" makes this a headless service. For a normal ClusterIP:
+  # clusterIP: <none> => removes cluster IP for direct DNS-based discovery
+  # If you prefer a standard ClusterIP, just remove the "clusterIP" line or set it to an empty string.
+
+---
+##################################################################
+# 5. PERSISTENT VOLUME CLAIM (WordPress Content)
+##################################################################
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: do-block-storage # or your default SC name
+
+---
+##################################################################
+# 6. WORDPRESS DEPLOYMENT
+##################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+        - name: wordpress
+          image: wordpress:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: mysql
+            - name: WORDPRESS_DB_NAME
+              value: wordpress
+            - name: WORDPRESS_DB_USER
+              value: wordpress
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-password
+          volumeMounts:
+            - name: wordpress-content
+              mountPath: /var/www/html
+      volumes:
+        - name: wordpress-content
+          persistentVolumeClaim:
+            claimName: wordpress-pvc
+
+---
+##################################################################
+# 7. WORDPRESS SERVICE (LoadBalancer for public access)
+##################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: wordpress
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+
+
