@@ -157,14 +157,14 @@ spec:
 
 ---
 ##################################################################
-# 7. WORDPRESS SERVICE (LoadBalancer for public access)
+# 7. WORDPRESS SERVICE
 ##################################################################
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress-lb
+  name: wordpress-wp1-svc
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: wordpress
   ports:
@@ -172,5 +172,35 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 80
+
+
+
+---
+##################################################################
+# 8. WORDPRESS INGRESS
+##################################################################
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordpress-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # if you're using cert-manager for Let's Encrypt
+spec:
+  tls:
+    - hosts:
+        - www1.sambasushi.ca          # your domain name
+      secretName: wordpress-tls   # cert will be stored here
+  rules:
+    - host: www1.sambasushi.ca
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wordpress-wp1-svc   # name of the Service
+                port:
+                  number: 80
 
 
