@@ -192,7 +192,7 @@ spec:
         - www1.sambasushi.ca          # your domain name
       secretName: wordpress-tls   # cert will be stored here
   rules:
-    - host: www1.sambasushi.ca
+    - host: www1.sambasushi.ca       # your domain name 
       http:
         paths:
           - path: /
