@@ -40,7 +40,7 @@ brew upgrade // install it's latest package
    ```
 7. type this command in the terminal before running kubernetes
     ```
-      export KUBECONFIG=/Users/kimchaewon/Downloads/[your_config_file]
+      export KUBECONFIG=/Users/your-name/Downloads/[your_config_file]
     ```
 
     *  To find config file using terminal
