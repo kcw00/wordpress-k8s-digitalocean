@@ -32,7 +32,7 @@ brew upgrade // install it's latest package
 5. install the ingress controller
    ```
      helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-     helm install my-nginx ingress-nginx/ingress-nginx`
+     helm install my-nginx ingress-nginx/ingress-nginx
    ```
 6. get kubectl
    ```
