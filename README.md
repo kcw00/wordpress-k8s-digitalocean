@@ -23,7 +23,7 @@ brew upgrade // install it's latest package
 ## Installation
 
 1. go to digitalocean and create an account
-2. go to your control panel and click [kuberbnetes]
+2. go to your control panel and click `Kuberbnetes`
    <img width="1512" alt="Screenshot 2025-03-08 at 13 02 37" src="https://github.com/user-attachments/assets/08e7e4fc-a184-4fe8-b49d-cce74f7222f7" />
 
 3. create your cluster and download your config file when it is ready (it will take some times to be ready)
