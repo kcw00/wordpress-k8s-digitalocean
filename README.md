@@ -27,12 +27,14 @@ brew upgrade // install it's latest package
    <img width="1512" alt="Screenshot 2025-03-08 at 13 02 37" src="https://github.com/user-attachments/assets/08e7e4fc-a184-4fe8-b49d-cce74f7222f7" />
 
 3. create your cluster and download your config file when it is ready (it will take some times to be ready)
-4. install the ingress controller
+  <img width="1488" alt="Screenshot 2025-05-11 at 19 39 49" src="https://github.com/user-attachments/assets/2f9d8bff-1d91-4e17-9b2e-2be5cc4dc46f" />
+
+5. install the ingress controller
    ```
      helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
      helm install my-nginx ingress-nginx/ingress-nginx`
    ```
-5. get kubectl
+6. get kubectl
    ```
      brew install kubectl
    ```
