@@ -56,10 +56,10 @@ brew upgrade // install it's latest package
       spec:
         tls:
           - hosts:
-              - www1.sambasushi.ca          # your domain name
+              - www.chaewon.ca          # your domain name
             secretName: wordpress-tls   # cert will be stored here
         rules:
-          - host: www1.sambasushi.ca       # your domain name
+          - host: www.chaewon.ca       # your domain name
     ```
 4. apply manifest.yaml to your kubernetes cluster `kubectl apply -f manifest.yaml`
 5. get your ip address
