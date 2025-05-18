@@ -162,9 +162,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress-wp1-svc
+  name: wordpress-lb
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: wordpress
   ports:
@@ -189,10 +189,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - www1.sambasushi.ca          # your domain name
+        - www.chaewon.ca         # your domain name
       secretName: wordpress-tls   # cert will be stored here
   rules:
-    - host: www1.sambasushi.ca       # your domain name 
+    - host: www.chaewon.ca      # your domain name 
       http:
         paths:
           - path: /
