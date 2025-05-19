@@ -5,10 +5,9 @@
 This repository provides a step-by-step guide on how to set up wordpress on your domain using digital ocean
 
 ---
+## ✅ Prerequisites
 
-Before starting to set up, you should install homebrew in your computer
-
-If you havent' install homebrew yet, go to here: https://brew.sh/
+Make sure you have homebrew installed via [Homebrew](https://brew.sh/)
 
 If you have install homebrew, run commands below
 
