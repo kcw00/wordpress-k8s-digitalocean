@@ -5,6 +5,10 @@
 This guide helps you deploy a WordPress site on a DigitalOcean Kubernetes Cluster with automatic HTTPS setup.
 
 ---
+## Architecture Diagram
+![alt text](wordpress.png)
+
+
 ## ✅ Prerequisites
 
 Make sure you have homebrew installed via [Homebrew](https://brew.sh/)
@@ -83,9 +87,9 @@ brew install helm            # Package manager for Kubernetes
 5. Point your DNS to your IP address: after getting the svc public ip address, apply it to the domain that you are working with  
     This is an example in Digital Ocean.
    
-   | Type  | Hostname    | Value    | TTL     |
-   |-------|-------------|----------|---------|
-   |  A    | www         | your-ip-address  | Defalut |
+   | Type | Hostname | Value           | TTL     |
+   | ---- | -------- | --------------- | ------- |
+   | A    | www      | your-ip-address | Defalut |
 
         
 6. Setup HTTPS with cert-manager
